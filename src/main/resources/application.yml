@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: THERAPY-PROVIDER-SERVICE
+  profile:
+    active: dev
+  cloud:
+    config:
+      name: therapy-provider-service
+  config:
+    import: "optional:configserver:"
+
