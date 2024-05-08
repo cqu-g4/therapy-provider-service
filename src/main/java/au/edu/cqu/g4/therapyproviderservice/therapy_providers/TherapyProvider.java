@@ -1,4 +1,4 @@
-package au.edu.cqu.g4.therapyproviderservice.therapy_provider_services;
+package au.edu.cqu.g4.therapyproviderservice.therapy_providers;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

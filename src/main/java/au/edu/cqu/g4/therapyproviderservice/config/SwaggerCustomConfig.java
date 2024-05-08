@@ -25,8 +25,8 @@ public class SwaggerCustomConfig {
                 addList("Bearer Authentication"))
                 .info(new Info().title("CQU G4 Integration REST API")
                         .description("Spring Integration API.")
-                        .version("1.0").contact(new Contact().name("Sangharsha Chaulagain")
-                                .email( "www.csangharsha.com.np").url("sangharsha.chaulagain@gmail.com"))
+                        .version("1.0").contact(new Contact().name("Julia Khadka")
+                                .url("zulia98765@gmail.com"))
                         .license(new License().name("License of API")
                                 .url("API license URL")));
     }
