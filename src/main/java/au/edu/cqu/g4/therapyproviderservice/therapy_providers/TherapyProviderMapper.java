@@ -1,5 +1,7 @@
 package au.edu.cqu.g4.therapyproviderservice.therapy_providers;
 
+import au.edu.cqu.g4.therapyproviderservice.therapy_providers.dtos.CreateTherapyProviderDto;
+import au.edu.cqu.g4.therapyproviderservice.therapy_providers.dtos.TherapyProviderDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -29,5 +31,26 @@ public class TherapyProviderMapper {
 
     public List<TherapyProvider> toEntity(List<TherapyProviderDto> dtos) {
         return dtos.stream().map(this::toEntity).toList();
+    }
+
+    public TherapyProvider toEntityFromCreateDto(CreateTherapyProviderDto dto, String userId) {
+        return TherapyProvider.builder()
+                .name(dto.getName())
+                .address(dto.getAddress())
+                .contactNumber(dto.getContactNumber())
+                .establishedDate(dto.getEstablishedDate())
+                .userId(userId)
+                .build();
+    }
+
+    public CreateTherapyProviderDto toCreateTherapyProviderDto(TherapyProvider therapyProvider) {
+        return CreateTherapyProviderDto.builder()
+                .id(therapyProvider.getId())
+                .name(therapyProvider.getName())
+                .userId(therapyProvider.getUserId())
+                .address(therapyProvider.getAddress())
+                .contactNumber(therapyProvider.getContactNumber())
+                .establishedDate(therapyProvider.getEstablishedDate())
+                .build();
     }
 }

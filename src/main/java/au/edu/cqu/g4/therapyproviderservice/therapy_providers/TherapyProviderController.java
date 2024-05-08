@@ -1,14 +1,20 @@
 package au.edu.cqu.g4.therapyproviderservice.therapy_providers;
 
 import au.edu.cqu.g4.therapyproviderservice.exceptions.CustomBackendException;
+import au.edu.cqu.g4.therapyproviderservice.proxies.ProxyCaller;
+import au.edu.cqu.g4.therapyproviderservice.proxies.dtos.UserRegistrationDto;
 import au.edu.cqu.g4.therapyproviderservice.services.Service;
 import au.edu.cqu.g4.therapyproviderservice.services.ServiceService;
+import au.edu.cqu.g4.therapyproviderservice.therapy_providers.dtos.CreateServiceDto;
+import au.edu.cqu.g4.therapyproviderservice.therapy_providers.dtos.CreateTherapyProviderDto;
+import au.edu.cqu.g4.therapyproviderservice.therapy_providers.dtos.TherapyProviderDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Proxy;
 import java.util.List;
 
 @RestController
@@ -19,10 +25,15 @@ public class TherapyProviderController {
     private final ServiceService serviceService;
     private final TherapyProviderMapper therapyProviderMapper;
 
+    private final ProxyCaller caller;
+
     @PostMapping
-    public ResponseEntity<TherapyProviderDto> create(@RequestBody TherapyProviderDto dto) {
-        TherapyProvider therapyProvider = therapyProviderService.save(therapyProviderMapper.toEntity(dto));
-        return new ResponseEntity<>(therapyProviderMapper.toDto(therapyProvider), HttpStatus.CREATED);
+    public ResponseEntity<CreateTherapyProviderDto> create(@RequestBody CreateTherapyProviderDto dto) {
+        UserRegistrationDto userRegistrationDto = caller.createTherapyProviderUser(dto);
+        TherapyProvider therapyProvider = therapyProviderService.save(therapyProviderMapper.toEntityFromCreateDto(dto, userRegistrationDto.getUserId()));
+        CreateTherapyProviderDto createTherapyProviderDto = therapyProviderMapper.toCreateTherapyProviderDto(therapyProvider);
+        createTherapyProviderDto.setEmail(dto.getEmail());
+        return new ResponseEntity<>(createTherapyProviderDto, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
