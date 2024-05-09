@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>au.edu.cqu.g4</groupId>
-    <artifactId>therapy-provider-service</artifactId>
+    <artifactId>therapy-provider-doctor</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>therapy-provider-service</name>
+    <name>therapy-provider-doctor</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>17</java.version>

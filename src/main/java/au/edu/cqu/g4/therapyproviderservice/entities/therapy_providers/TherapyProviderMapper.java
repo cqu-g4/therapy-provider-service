@@ -1,7 +1,7 @@
-package au.edu.cqu.g4.therapyproviderservice.therapy_providers;
+package au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers;
 
-import au.edu.cqu.g4.therapyproviderservice.therapy_providers.dtos.CreateTherapyProviderDto;
-import au.edu.cqu.g4.therapyproviderservice.therapy_providers.dtos.TherapyProviderDto;
+import au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers.dtos.CreateTherapyProviderDto;
+import au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers.dtos.TherapyProviderDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

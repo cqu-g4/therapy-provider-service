@@ -1,4 +1,4 @@
-package au.edu.cqu.g4.therapyproviderservice.therapy_providers;
+package au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

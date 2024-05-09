@@ -1,4 +1,4 @@
-package au.edu.cqu.g4.therapyproviderservice.therapy_providers.dtos;
+package au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers.dtos;
 
 import au.edu.cqu.g4.therapyproviderservice.shared_entities.Address;
 import lombok.Builder;
@@ -15,6 +15,8 @@ public class CreateTherapyProviderDto {
     private String name;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate establishedDate;
+    private String userFirstName;
+    private String userLastName;
     private String email;
     private String password;
     private Address address;

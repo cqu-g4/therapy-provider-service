@@ -1,4 +1,4 @@
-package au.edu.cqu.g4.therapyproviderservice.therapy_providers;
+package au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers;
 
 import au.edu.cqu.g4.therapyproviderservice.shared_entities.Address;
 import lombok.AllArgsConstructor;
@@ -37,5 +37,6 @@ public class TherapyProvider {
     private String contactNumber;
 
     private List<TPService> services = new ArrayList<>();
+    private List<TPDoctor> doctors = new ArrayList<>();
 
 }

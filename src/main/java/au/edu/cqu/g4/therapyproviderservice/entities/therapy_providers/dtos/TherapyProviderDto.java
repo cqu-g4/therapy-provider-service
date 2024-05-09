@@ -1,6 +1,6 @@
-package au.edu.cqu.g4.therapyproviderservice.therapy_providers.dtos;
+package au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers.dtos;
 
-import au.edu.cqu.g4.therapyproviderservice.therapy_providers.TPService;
+import au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers.TPService;
 import lombok.Builder;
 import lombok.Data;
 

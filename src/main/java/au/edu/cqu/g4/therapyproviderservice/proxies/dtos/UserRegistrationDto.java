@@ -7,6 +7,8 @@ import lombok.Data;
 @Builder
 public class UserRegistrationDto {
     private String userId;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
     private String role;

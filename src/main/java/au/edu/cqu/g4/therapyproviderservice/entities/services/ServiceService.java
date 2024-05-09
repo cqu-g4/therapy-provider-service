@@ -1,4 +1,4 @@
-package au.edu.cqu.g4.therapyproviderservice.services;
+package au.edu.cqu.g4.therapyproviderservice.entities.services;
 
 import java.util.List;
 

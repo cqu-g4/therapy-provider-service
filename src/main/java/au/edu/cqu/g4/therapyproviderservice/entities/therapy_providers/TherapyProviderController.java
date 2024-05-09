@@ -1,20 +1,22 @@
-package au.edu.cqu.g4.therapyproviderservice.therapy_providers;
+package au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers;
 
+import au.edu.cqu.g4.therapyproviderservice.entities.doctors.Doctor;
+import au.edu.cqu.g4.therapyproviderservice.entities.doctors.DoctorService;
+import au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers.dtos.CreateDoctorDto;
 import au.edu.cqu.g4.therapyproviderservice.exceptions.CustomBackendException;
 import au.edu.cqu.g4.therapyproviderservice.proxies.ProxyCaller;
 import au.edu.cqu.g4.therapyproviderservice.proxies.dtos.UserRegistrationDto;
-import au.edu.cqu.g4.therapyproviderservice.services.Service;
-import au.edu.cqu.g4.therapyproviderservice.services.ServiceService;
-import au.edu.cqu.g4.therapyproviderservice.therapy_providers.dtos.CreateServiceDto;
-import au.edu.cqu.g4.therapyproviderservice.therapy_providers.dtos.CreateTherapyProviderDto;
-import au.edu.cqu.g4.therapyproviderservice.therapy_providers.dtos.TherapyProviderDto;
+import au.edu.cqu.g4.therapyproviderservice.entities.services.Service;
+import au.edu.cqu.g4.therapyproviderservice.entities.services.ServiceService;
+import au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers.dtos.CreateServiceDto;
+import au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers.dtos.CreateTherapyProviderDto;
+import au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers.dtos.TherapyProviderDto;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Proxy;
 import java.util.List;
 
 @RestController
@@ -23,6 +25,7 @@ public class TherapyProviderController {
 
     private final TherapyProviderService therapyProviderService;
     private final ServiceService serviceService;
+    private final DoctorService doctorService;
     private final TherapyProviderMapper therapyProviderMapper;
 
     private final ProxyCaller caller;
@@ -101,6 +104,60 @@ public class TherapyProviderController {
                 .toList();
 
         therapyProvider.setServices(tpServices);
+        therapyProviderService.save(therapyProvider);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/doctors")
+    public ResponseEntity<TherapyProviderDto> saveTPDoctor(@PathVariable String id, @RequestBody CreateDoctorDto createDoctorDto) {
+        TherapyProvider therapyProvider = therapyProviderService.getById(id);
+        if(therapyProvider == null) throw new CustomBackendException("Therapy Provider not found");
+
+        if(StringUtils.isEmpty(createDoctorDto.getId())) {
+            // save to Service database
+            Doctor savedDoctor = doctorService.save(
+                    Doctor.builder()
+                            .name(createDoctorDto.getName())
+                            .specialization(createDoctorDto.getSpecialization())
+                            .personalBio(createDoctorDto.getPersonalBio())
+                            .build()
+            );
+            // add service to therapy provider
+            therapyProvider.getDoctors().add(
+                    TPDoctor.builder()
+                            .id(savedDoctor.getId())
+                            .name(savedDoctor.getName())
+                            .build()
+            );
+        } else  {
+            Doctor doctor = doctorService.getById(createDoctorDto.getId());
+            if(doctor == null) throw new CustomBackendException("Service not found");
+
+            //update service in therapy provider
+            therapyProvider.getDoctors()
+                    .forEach(d ->
+                    {
+                        if(StringUtils.equals(d.getId(), doctor.getId())) {
+                            d.setName(doctor.getName());
+                        }
+                    });
+            therapyProviderService.save(therapyProvider);
+        }
+
+        return new ResponseEntity<>(therapyProviderMapper.toDto(therapyProvider), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}/doctors/{doctorId}")
+    public ResponseEntity<?> deleteDoctor(@PathVariable String id, @PathVariable String doctorId) {
+        TherapyProvider therapyProvider = therapyProviderService.getById(id);
+        if(therapyProvider == null) throw new CustomBackendException("Therapy Provider not found");
+
+        List<TPDoctor> tpDoctors = therapyProvider.getDoctors()
+                .stream()
+                .filter(d -> !StringUtils.equals(doctorId, d.getId()))
+                .toList();
+
+        therapyProvider.setDoctors(tpDoctors);
         therapyProviderService.save(therapyProvider);
         return new ResponseEntity<>(HttpStatus.OK);
     }
