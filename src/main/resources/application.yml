@@ -1,11 +1,12 @@
 spring:
   application:
     name: THERAPY-PROVIDER-SERVICE
-  profile:
-    active: dev
+  # profile:
+  #   active: dev
   cloud:
     config:
       name: therapy-provider-service
-  config:
-    import: "optional:configserver:"
+      uri: http://configuration-server:8888
+  config:      
+   import: "optional:configserver:"
 
