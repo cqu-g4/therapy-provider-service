@@ -5,6 +5,7 @@ import java.util.List;
 
 public interface AppointmentService {
     List<Appointment> getAllByTherapyProviderId(String therapyProviderId);
+    List<Appointment> getAllByUserId(String userId);
     List<Appointment> findOverlappingAppointments(String doctorId, LocalDateTime startTime, LocalDateTime endTime);
     Appointment save(Appointment doctor);
 }

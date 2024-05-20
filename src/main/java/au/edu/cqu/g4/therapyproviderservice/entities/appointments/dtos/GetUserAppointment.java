@@ -16,6 +16,7 @@ public class GetUserAppointment {
     private String id;
     private Doctor doctor;
     private String therapyProviderId;
+    private String therapyProviderName;
     private UserDto user;
     private LocalDateTime startDate;
     private LocalDateTime endDate;

@@ -18,6 +18,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    public List<Appointment> getAllByUserId(String userId) {
+        return appointmentRepository.findAppointmentByUserId(userId);
+    }
+
+    @Override
     public List<Appointment> findOverlappingAppointments(String doctorId, LocalDateTime startTime, LocalDateTime endTime) {
         return appointmentRepository.findOverlappingAppointments(doctorId, startTime, endTime);
     }

@@ -4,6 +4,8 @@ import au.edu.cqu.g4.therapyproviderservice.entities.appointments.dtos.CreateApp
 import au.edu.cqu.g4.therapyproviderservice.entities.appointments.dtos.GetUserAppointment;
 import au.edu.cqu.g4.therapyproviderservice.entities.appointments.dtos.UserDto;
 import au.edu.cqu.g4.therapyproviderservice.entities.doctors.DoctorService;
+import au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers.TherapyProvider;
+import au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers.TherapyProviderService;
 import au.edu.cqu.g4.therapyproviderservice.proxies.ProxyCaller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
     private final AppointmentMapper appointmentMapper;
+    private final TherapyProviderService therapyProviderService;
 
     private final DoctorService doctorService;
     private final ProxyCaller caller;
@@ -31,6 +34,8 @@ public class AppointmentController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        TherapyProvider therapyProvider = therapyProviderService.getById(dto.getTherapyProviderId());
 
         // Check for overlapping appointments
         List<Appointment> overlappingAppointments = appointmentService.findOverlappingAppointments(
@@ -48,18 +53,38 @@ public class AppointmentController {
                 appointmentMapper.toGetUserAppointmentDto(
                         appointment,
                         user,
-                        doctorService.getById(appointment.getDoctorId())
+                        doctorService.getById(appointment.getDoctorId()),
+                        therapyProvider.getName()
                 ),
                 HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<List<GetUserAppointment>> getUserAppointmentByTherapyProvider(@PathVariable String id) {
-        List<GetUserAppointment> apptList = appointmentService.getAllByTherapyProviderId(id).stream()
+    @GetMapping("/{therapyProviderId}")
+    public ResponseEntity<List<GetUserAppointment>> getUserAppointmentByTherapyProvider(@PathVariable String therapyProviderId) {
+        TherapyProvider therapyProvider = therapyProviderService.getById(therapyProviderId);
+
+        List<GetUserAppointment> apptList = appointmentService.getAllByTherapyProviderId(therapyProviderId).stream()
                 .map(appt -> appointmentMapper.toGetUserAppointmentDto(
-                        appt,
-                        getUser(appt.getUserId()),
-                        doctorService.getById(appt.getDoctorId()))
+                            appt,
+                            getUser(appt.getUserId()),
+                            doctorService.getById(appt.getDoctorId()),
+                            therapyProvider.getName()
+                        )
+                )
+                .toList();
+        return new ResponseEntity<>(apptList, HttpStatus.OK);
+    }
+
+    @GetMapping("/{therapyProviderId}/users/{userId}")
+    public ResponseEntity<List<GetUserAppointment>> getUserAppointmentByUserId(@PathVariable String userId, @PathVariable String therapyProviderId) {
+        TherapyProvider therapyProvider = therapyProviderService.getById(therapyProviderId);
+        List<GetUserAppointment> apptList = appointmentService.getAllByUserId(userId).stream()
+                .map(appt -> appointmentMapper.toGetUserAppointmentDto(
+                            appt,
+                            getUser(appt.getUserId()),
+                            doctorService.getById(appt.getDoctorId()),
+                            therapyProvider.getName()
+                        )
                 )
                 .toList();
         return new ResponseEntity<>(apptList, HttpStatus.OK);

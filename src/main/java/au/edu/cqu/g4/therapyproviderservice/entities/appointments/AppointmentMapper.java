@@ -19,7 +19,7 @@ public class AppointmentMapper {
                 .build();
     }
 
-    public GetUserAppointment toGetUserAppointmentDto(Appointment appointment, UserDto user, Doctor doctor) {
+    public GetUserAppointment toGetUserAppointmentDto(Appointment appointment, UserDto user, Doctor doctor, String name) {
         return GetUserAppointment.builder()
                 .id(appointment.getId())
                 .user(user)
@@ -27,6 +27,7 @@ public class AppointmentMapper {
                 .endDate(appointment.getEndTime())
                 .startDate(appointment.getStartTime())
                 .therapyProviderId(appointment.getTherapyProviderId())
+                .therapyProviderName(name)
                 .build();
     }
 }

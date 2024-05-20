@@ -9,6 +9,8 @@ import java.util.List;
 public interface AppointmentRepository extends MongoRepository<Appointment, String> {
     List<Appointment> findAppointmentByTherapyProviderId(String therapyProviderId);
 
+    List<Appointment> findAppointmentByUserId(String userId);
+
     @Query("{ 'doctorId': ?0, 'startTime': { $lt: ?2 }, 'endTime': { $gt: ?1 } }")
     List<Appointment> findOverlappingAppointments(String doctorId, LocalDateTime startTime, LocalDateTime endTime);
 }
