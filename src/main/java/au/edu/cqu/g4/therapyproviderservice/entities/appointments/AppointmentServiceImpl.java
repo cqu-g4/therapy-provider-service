@@ -3,6 +3,7 @@ package au.edu.cqu.g4.therapyproviderservice.entities.appointments;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -14,6 +15,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<Appointment> getAllByTherapyProviderId(String therapyProviderId) {
         return appointmentRepository.findAppointmentByTherapyProviderId(therapyProviderId);
+    }
+
+    @Override
+    public List<Appointment> findOverlappingAppointments(String doctorId, LocalDateTime startTime, LocalDateTime endTime) {
+        return appointmentRepository.findOverlappingAppointments(doctorId, startTime, endTime);
     }
 
     @Override

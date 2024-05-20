@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/appointments")
 @RequiredArgsConstructor
@@ -31,6 +33,14 @@ public class AppointmentController {
             user = caller.getUserById(dto.getUserId());
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        // Check for overlapping appointments
+        List<Appointment> overlappingAppointments = appointmentService.findOverlappingAppointments(
+                dto.getDoctorId(), dto.getStartTime(), dto.getEndTime());
+
+        if (!overlappingAppointments.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT); // 409 Conflict if time slot is already booked
         }
 
         Appointment appointment = appointmentService.save(
