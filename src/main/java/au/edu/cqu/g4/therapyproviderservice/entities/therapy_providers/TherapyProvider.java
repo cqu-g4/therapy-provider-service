@@ -1,6 +1,5 @@
 package au.edu.cqu.g4.therapyproviderservice.entities.therapy_providers;
 
-import au.edu.cqu.g4.therapyproviderservice.shared_entities.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,7 +30,7 @@ public class TherapyProvider {
     @Field("established_date")
     private LocalDate establishedDate;
 
-    private Address address;
+    private String address;
 
     @Field("contact_number")
     private String contactNumber;
