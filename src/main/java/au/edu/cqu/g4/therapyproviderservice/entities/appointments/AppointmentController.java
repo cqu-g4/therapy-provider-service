@@ -8,10 +8,7 @@ import au.edu.cqu.g4.therapyproviderservice.proxies.ProxyCaller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -54,5 +51,21 @@ public class AppointmentController {
                         doctorService.getById(appointment.getDoctorId())
                 ),
                 HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<GetUserAppointment>> getUserAppointmentByTherapyProvider(@PathVariable String id) {
+        List<GetUserAppointment> apptList = appointmentService.getAllByTherapyProviderId(id).stream()
+                .map(appt -> appointmentMapper.toGetUserAppointmentDto(
+                        appt,
+                        getUser(appt.getUserId()),
+                        doctorService.getById(appt.getDoctorId()))
+                )
+                .toList();
+        return new ResponseEntity<>(apptList, HttpStatus.OK);
+    }
+
+    private UserDto getUser(String userId) {
+        return caller.getUserById(userId);
     }
 }
